@@ -82,20 +82,6 @@ function step1(){
     });
 }
 
-//Step 1.5: Get edit token.
-var editToken;
-function getEditToken(){
-  wpApiCall('get', {
-    action: 'tokens',
-    type: 'edit'
-  }, function(res) {
-    if (res.body.token) {
-      editToken = res.body.token.edittoken;
-      getTransclusions(resumeFrom);
-    }
-  });
-}
-
 //Step 2: Get list of pages transcluding target template.
 function getTransclusions(eicontinue){
   var params = {
@@ -127,8 +113,9 @@ var runningEdits = 0;
 function getPageContents(ids,endCb){
   wpApiCall('get',{
     action: 'query',
-    prop: 'revisions',
+    prop: 'info|revisions',
     rvprop: 'content',
+    intoken: 'edit',
     pageids: ids.join('|')
   },function(res){
     
